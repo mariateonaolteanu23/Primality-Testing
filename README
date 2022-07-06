@@ -1,0 +1,83 @@
+#Olteanu Maria Teona 321CA
+
+## Fermat and Miller-Rabin Primality Tests
+
+#  General Info
+Two probalistic algorithms that determine whether a given number is composite or probably prime.
+We want to evaluate and compare the execution time and accuracy of these 2 primality tests.
+RESTRICTIONS: testing only for 32-bits numbers
+
+#  Tests
+Folder in contains 55 input tests.
+Folder out contains the correct results of the inputs tests
+
+Input test format:
+- first line, the test criteria and test number/index (e.g. TIME 1)
+- second line, the number of iterations/trials
+- third line, number of elements of the following sequence
+- the next line contains the sequence of numbers
+
+The experimental tests/results foscus on 2 criterias:
+
+TIME
+Tests 1->30 evaluate the execution time of the algorithms by testing for different sequences of prime numbers.
+For the first set of TIME tests we aim to determine how the number of trials and tested number size(digits) affect time complexity.
+Tests 21 to 30 contain random generated primes to mimic the practical usage of these 2 algorithms.
+
+ACCURACY
+Tests test31.in->test50.in evaluate the accuracy of the algorithms by testing for Charmichael numbers, strong pseudoprimes and random integers.
+Tests 31->41 contain only Charmichael numbers and strong base pseudoprimes. How many rounds (trials) of testing are enough for a correct output?
+Tests 41->44 contain sequences of either small numbers or big integers (in our case 9 to 10 digits).
+Tests 45->55 contain randomly generated 32-bits numbers, also to mimic the usage of these 2 algorithms in the industry.
+
+#  Files
+test.c -> entry point of our program: read from test*.in files and print in test*.out files
+criteria.c-> 2 criterias tests implementation: TIME & ACCURACY
+
+miller_rabin.c ->  Miller-Rabin primality test
+deterministic_miller_rabin.c -> deterministic aproach to Miller-Rabin primality test
+
+fermat.c -> Fermat test using 1 trial base 
+randomized_fermat.c -> Fermat test using multiple trial bases (randomly generated)
+
+accurate_prime.c -> 100% accurate primality test based on trial divison
+
+mersenne_twister.c -> pseudorandom number generator used for generating input tests 45 to 55
+mt_primes.c -> pseudorandom prime generator (based on the Mersenne Twister implementation) used for tests 21 to 30
+
+After runtime, the program generates:
+- file "exec_time.out" which lists the execution time for tests 1 to 20.
+- folder "tmp" which contains the tests (31 to 55) that failed and data about the returned errors.
+(e.g. test10 failed => tmp/test[10].out)
+
+#  Usage
+build: make
+
+run: make run-p3 (e.g. runs Miller-Rabin algorithm)
+p1 = Fermat algorithm using 1 base
+p2 = Randomized Fermat algorithm (multiple bases)
+p3 = Miller-Rabin algorithm
+p4 = deterministic Miller-Rabin test
+best = runs the best algorithm
+
+After running the program always use the command "make clean" to delete the files previously generated.
+
+#  Comments
+
+The Fermat test using one trial base is significantly faster but less accurate.
+For both Miller-Rabin and Fermat, the more we increase the number of iterations we enhance the corectness of the test's result.
+Thus we will focus our research on comparison of the Miller-Rabin test and the randomized Fermat test using multiple bases.
+
+Since we are only testing for 32-bits numbers we can implement a deterministic variant of the Miller-Rabin test.
+By comparison this test has the best results concerning execution time and accuracy.
+In addition to it, we have to keep in mind that the error probability affects every primality test (for big integers), regardless of wheter it is deterministic or not.
+
+We should also state that realisctically these 2 algorithms are optimized and apllied for big integers (about 1024 or 2048 bit size).
+Therefore part of the acquired experimental results may not shocase the full pontential of the specified algorithms.
+
+#  Credits
+
+- primes sequences for tests 1->20: https://primes.utm.edu/lists/small/millions/
+- pseudocode implementation (Fermat & Miller-Rabin) from Introduction to Algorithms, 3rd Edition (The MIT Press) by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein.
+- Mersenne Twister 32-bits pseudorandom generator http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/VERSIONS/C-LANG/mt19937ar-nrl.c
+- deterministic Miller-Rabin test https://rosettacode.org/wiki/Miller%E2%80%93Rabin_primality_test#Deterministic_up_to_341.2C550.2C071.2C728.2C321
